@@ -1,0 +1,23 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  vars:
+
+    compose_version: 1.16.1
+    compose_url: "https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-Linux-x86_64"
+    compose_sha256sum: 1804b0ce6596efe707b9cab05d74b161833ed503f0535a937dd5d17bea8fc50a
+
+  tasks:
+
+    - name: install docker-compose
+      get_url:
+        url: "{{ compose_url }}"
+        checksum: "sha256:{{ compose_sha256sum }}"
+        dest: /usr/local/bin/docker-compose
+        owner: root
+        group: root
+        mode: 0755

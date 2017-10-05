@@ -1,0 +1,2 @@
+[common]
+server-1 ansible_host=192.0.2.1
