@@ -12,6 +12,11 @@
         name: vm.swappiness
         value: 10
 
+    - name: sysctl vm.overcommit_memory
+      sysctl:
+        name: vm.overcommit_memory
+        value: 1
+
     - name: sysctl net.core.somaxconn
       sysctl:
         name: net.core.somaxconn
