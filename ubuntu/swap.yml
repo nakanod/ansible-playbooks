@@ -22,12 +22,12 @@
       when: ansible_swaptotal_mb < 1
       command: mkswap /swap
 
-    - name: swap on
-      when: ansible_swaptotal_mb < 1
-      command: swapon -a
-
     - name: add to /etc/fstab
       lineinfile:
         path: /etc/fstab
         regexp: '^/swap '
         line: '/swap none swap sw 0 0'
+
+    - name: swap on
+      when: ansible_swaptotal_mb < 1
+      command: swapon -a
