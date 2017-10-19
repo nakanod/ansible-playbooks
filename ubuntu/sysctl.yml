@@ -37,6 +37,11 @@
         name: net.ipv4.tcp_tw_reuse
         value: 1
 
+    - name: sysctl net.ipv4.tcp_fin_timeout
+      sysctl:
+        name: net.ipv4.tcp_fin_timeout
+        value: 30
+
     - name: sysctl net.ipv4.ip_local_port_range
       sysctl:
         name: net.ipv4.ip_local_port_range
