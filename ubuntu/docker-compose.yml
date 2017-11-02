@@ -7,9 +7,9 @@
 
   vars:
 
-    compose_version: 1.16.1
+    compose_version: 1.17.0
     compose_url: "https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-Linux-x86_64"
-    compose_sha256sum: 1804b0ce6596efe707b9cab05d74b161833ed503f0535a937dd5d17bea8fc50a
+    compose_sha256sum: b553025b82fc61547933f05693716c92967b835979ba9b092b31e50bd35e30c9
 
   tasks:
 
