@@ -1,0 +1,30 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+
+    - name: download erlang-solutions
+      get_url:
+        url: https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+        checksum: sha256:747a4e1ed19370f41c2bb11c151cc753505a6c9d210888f9cd5734d25a4aacd2
+        dest: /tmp/erlang-solutions_1.0_all.deb
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: install erlang-solutions
+      apt:
+        deb: /tmp/erlang-solutions_1.0_all.deb
+
+    - name: install erlang and elixir
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - esl-erlang
+        - elixir
