@@ -1,0 +1,34 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+
+    - name: create sources.list for nginx
+      copy:
+        src: files/etc/apt/sources.list.d/nginx.list
+        dest: /etc/apt/sources.list.d/nginx.list
+
+    - name: add apt key for nginx
+      apt_key:
+        url: http://nginx.org/keys/nginx_signing.key
+        state: present
+
+    - name: install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      notify:
+        - restart nginx
+
+  handlers:
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+        enabled: yes
