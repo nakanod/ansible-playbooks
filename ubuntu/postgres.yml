@@ -1,0 +1,40 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+
+    - name: install required packages
+      apt:
+        name: ca-certificates
+        state: present
+        update_cache: yes
+
+    - name: create sources.list for postgres
+      copy:
+        src: files/etc/apt/sources.list.d/pgdg.list
+        dest: /etc/apt/sources.list.d/pgdg.list
+
+    - name: add apt key for postgres
+      apt_key:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        state: present
+
+    - name: install postgres 10
+      apt:
+        name: postgresql-10
+        state: present
+        update_cache: yes
+      notify:
+        - restart postgres
+
+  handlers:
+
+    - name: restart postgres
+      service:
+        name: postgresql
+        state: restarted
+        enabled: yes
