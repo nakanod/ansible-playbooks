@@ -1,0 +1,24 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+
+    - name: install unbound
+      apt:
+        name: unbound
+        state: present
+        update_cache: yes
+      notify:
+        - restart unbound
+
+  handlers:
+
+    - name: restart unbound
+      service:
+        name: unbound
+        state: restarted
+        enabled: yes
