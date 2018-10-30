@@ -7,18 +7,15 @@
 
   tasks:
 
-    - name: download erlang-solutions
-      get_url:
-        url: https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
-        checksum: sha256:747a4e1ed19370f41c2bb11c151cc753505a6c9d210888f9cd5734d25a4aacd2
-        dest: /tmp/erlang-solutions_1.0_all.deb
-        owner: root
-        group: root
-        mode: 0644
+    - name: create sources.list for erlang solutions
+      template:
+        src: templates/etc/apt/sources.list.d/erlang_solutions.list.j2
+        dest: /etc/apt/sources.list.d/erlang_solutions.list
 
-    - name: install erlang-solutions
-      apt:
-        deb: /tmp/erlang-solutions_1.0_all.deb
+    - name: add apt key for erlang solutions
+      apt_key:
+        url: https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc
+        state: present
 
     - name: install erlang and elixir
       apt:
