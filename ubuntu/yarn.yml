@@ -1,0 +1,30 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+
+    - name: remove unused packages
+      apt:
+        name: cmdtest
+        state: absent
+        update_cache: yes
+
+    - name: create sources.list for yarn
+      copy:
+        src: files/etc/apt/sources.list.d/yarn.list
+        dest: /etc/apt/sources.list.d/yarn.list
+
+    - name: add apt key for yarn
+      apt_key:
+        url: https://dl.yarnpkg.com/debian/pubkey.gpg
+        state: present
+
+    - name: install yarn
+      apt:
+        name: yarn
+        state: present
+        update_cache: yes
