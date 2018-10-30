@@ -1,0 +1,51 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  vars:
+
+    node_version: 11
+
+  tasks:
+
+    - name: install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - apt-transport-https
+        - lsb-release
+        - curl
+        - gcc
+        - g++
+        - make
+
+    - name: remove launchpad ppa repository for nodejs
+      apt_repository:
+        repo: "ppa:chris-lea/node.js"
+        state: absent
+
+    - name: remove launchpad ppa repository sources.list for nodejs
+      file:
+        path: "/etc/apt/sources.list.d/chris-lea-node_js-{{ ansible_distribution_release }}.list"
+        state: absent
+
+    - name: create sources.list for nodejs
+      template:
+        src: templates/etc/apt/sources.list.d/nodesource.list.j2
+        dest: /etc/apt/sources.list.d/nodesource.list
+
+    - name: add apt key for nodejs
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+
+    - name: install nodejs
+      apt:
+        name: nodejs
+        state: present
+        update_cache: yes
