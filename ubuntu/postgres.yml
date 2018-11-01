@@ -5,6 +5,10 @@
   become_user: root
   become_method: sudo
 
+  vars:
+
+    postgres_version: 11
+
   tasks:
 
     - name: install required packages
@@ -23,9 +27,9 @@
         url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
         state: present
 
-    - name: install postgres 10
+    - name: install postgres {{ postgres_version }}
       apt:
-        name: postgresql-10
+        name: postgresql-{{ postgres_version }}
         state: present
         update_cache: yes
       notify:
