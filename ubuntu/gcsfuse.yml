@@ -1,0 +1,24 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+
+    - name: create sources.list for gcsfuse
+      template:
+        src: templates/etc/apt/sources.list.d/gcsfuse.list.j2
+        dest: /etc/apt/sources.list.d/gcsfuse.list
+
+    - name: add apt key for gcsfuse
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: install gcsfuse
+      apt:
+        name: gcsfuse
+        state: present
+        update_cache: yes
