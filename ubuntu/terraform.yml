@@ -1,0 +1,34 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  vars:
+
+    terraform_version: 0.12.24
+    terraform_url: "https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip"
+    terraform_sha256sum: 602d2529aafdaa0f605c06adb7c72cfb585d8aa19b3f4d8d189b42589e27bf11
+    terraform_zip_path: "/tmp/terraform_{{ terraform_version }}_linux_amd64.zip"
+
+  tasks:
+
+    - name: download terraform zip
+      get_url:
+        url: "{{ terraform_url }}"
+        checksum: "sha256:{{ terraform_sha256sum }}"
+        dest: "{{ terraform_zip_path }}"
+
+    - name: install terraform
+      unarchive:
+        src: "{{ terraform_zip_path }}"
+        dest: /usr/local/bin
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: remove terraform zip
+      file:
+        path: "{{ terraform_zip_path }}"
+        state: absent
