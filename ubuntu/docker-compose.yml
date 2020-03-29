@@ -7,17 +7,30 @@
 
   vars:
 
-    compose_version: 1.22.0
+    compose_version: 1.25.4
     compose_url: "https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-Linux-x86_64"
-    compose_sha256sum: f679a24b93f291c3bffaff340467494f388c0c251649d640e661d509db9d57e9
+    compose_sha256sum_url: "{{ compose_url }}.sha256"
+    compose_sha256sum_file: /tmp/docker-compose.sha256
 
   tasks:
+
+    - name: download docker-compose checksum
+      get_url:
+        url: "{{ compose_sha256sum_url }}"
+        dest: "{{ compose_sha256sum_file }}"
 
     - name: install docker-compose
       get_url:
         url: "{{ compose_url }}"
-        checksum: "sha256:{{ compose_sha256sum }}"
+        checksum: "sha256:{{ compose_checksums[0].split()[0] }}"
         dest: /usr/local/bin/docker-compose
         owner: root
         group: root
         mode: 0755
+      vars:
+        compose_checksums: '{{ lookup("file", "{{ compose_sha256sum_file }}").splitlines() | select("match", ".*docker-compose-Linux-x86_64$") | list }}'
+
+    - name: remove docker-compose checksum
+      file:
+        path: "{{ compose_sha256sum_file }}"
+        state: absent
