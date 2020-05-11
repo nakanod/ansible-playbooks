@@ -19,9 +19,8 @@
 
     - name: install erlang and elixir
       apt:
-        name: "{{ item }}"
+        pkg:
+          - esl-erlang
+          - elixir
         state: present
         update_cache: yes
-      with_items:
-        - esl-erlang
-        - elixir

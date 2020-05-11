@@ -13,16 +13,15 @@
 
     - name: install required packages
       apt:
-        name: "{{ item }}"
+        pkg:
+          - apt-transport-https
+          - lsb-release
+          - curl
+          - gcc
+          - g++
+          - make
         state: present
         update_cache: yes
-      with_items:
-        - apt-transport-https
-        - lsb-release
-        - curl
-        - gcc
-        - g++
-        - make
 
     - name: remove launchpad ppa repository for nodejs
       apt_repository:

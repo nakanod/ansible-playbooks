@@ -9,23 +9,21 @@
 
     - name: uninstall old versions
       apt:
-        name: "{{ item }}"
+        pkg:
+          - docker
+          - docker-engine
+          - docker.io
         state: absent
-      with_items:
-        - docker
-        - docker-engine
-        - docker.io
 
     - name: install required packages
       apt:
-        name: "{{ item }}"
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
         state: present
         update_cache: yes
-      with_items:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - software-properties-common
 
     - name: add apt key for docker
       apt_key:
