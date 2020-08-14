@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  vars:
+
+    hugo_version: 0.74.3
+
+  tasks:
+
+    - name: install hugo
+      apt:
+        deb: https://github.com/gohugoio/hugo/releases/download/v{{ hugo_version }}/hugo_{{ hugo_version }}_Linux-64bit.deb
