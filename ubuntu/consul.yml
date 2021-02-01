@@ -1,0 +1,35 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  vars:
+
+    consul_version: 1.9.2
+    consul_url: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
+    consul_url: "https://releases.hashicorp.com/consul/1.9.2/consul_1.9.2_linux_amd64.zip"
+    consul_sha256sum: 5141b2e7f54b51e07601d2b4ff1853f1d9b8e26b26bfb55281a8c47d8581352e
+    consul_zip_path: "/tmp/consul_{{ consul_version }}_linux_amd64.zip"
+
+  tasks:
+
+    - name: download consul zip
+      get_url:
+        url: "{{ consul_url }}"
+        checksum: "sha256:{{ consul_sha256sum }}"
+        dest: "{{ consul_zip_path }}"
+
+    - name: install consul
+      unarchive:
+        src: "{{ consul_zip_path }}"
+        dest: /usr/local/bin
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: remove consul zip
+      file:
+        path: "{{ consul_zip_path }}"
+        state: absent
