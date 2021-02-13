@@ -1,0 +1,47 @@
+---
+
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  vars:
+
+    pulumi_version: 2.20.0
+    pulumi_url: "https://get.pulumi.com/releases/sdk/pulumi-v{{ pulumi_version }}-linux-x64.tar.gz"
+    pulumi_sha256sum: a9d4002e5bd4d1d48497e846aa106065469be9e8407b489a61e7871b34a566f6
+    pulumi_tarball_path: "/tmp/pulumi-v{{ pulumi_version }}-linux-x64.tar.gz"
+
+  tasks:
+
+    - name: download pulumi tarball
+      get_url:
+        url: "{{ pulumi_url }}"
+        checksum: "sha256:{{ pulumi_sha256sum }}"
+        dest: "{{ pulumi_tarball_path }}"
+
+    - name: extract pulumi tarball
+      unarchive:
+        src: "{{ pulumi_tarball_path }}"
+        dest: /tmp
+
+    - name: install pulumi
+      copy:
+        src: "{{ item }}"
+        dest: /usr/local/bin
+        owner: root
+        group: root
+        mode: 0755
+        remote_src: True
+      with_fileglob:
+        - "/tmp/pulumi/pulumi*"
+
+    - name: remove pulumi tarball
+      file:
+        path: "{{ pulumi_tarball_path }}"
+        state: absent
+
+    - name: remove pulumi directory
+      file:
+        path: "/tmp/pulumi"
+        state: absent
